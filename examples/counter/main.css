@@ -1,0 +1,61 @@
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.cont {
+  flex-direction: column;
+  background-color: whitesmoke;
+}
+
+body div {
+  padding: 0.3rem;
+  margin: 0.5rem;
+  background-color: lightgrey;
+  display: flex;
+}
+
+body span {
+  padding: 0.5rem;
+  margin: 0.3rem;
+  width: 100%;
+  background-color: #fff;
+  text-align: center;
+}
+
+body span.pos {
+  color: green;
+}
+
+body span.neg {
+  color: royalblue;
+}
+
+body span.nut {
+  color: white;
+}
+
+body span.posb {
+  background-color: green;
+}
+
+body span.negb {
+  background-color: royalblue;
+}
+
+body div button {
+  background-color: #fff;
+  border: 1px solid grey;
+  padding: 0.5rem 1rem;
+  margin: 0.3rem;
+  cursor: pointer;
+}

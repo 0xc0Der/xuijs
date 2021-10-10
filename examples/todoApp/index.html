@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="">
+        <title>todoApp</title>
+
+        <link rel="stylesheet" href="main.css" />
+        <script type="module" src="index.js"></script>
+    </head>
+    <body>
+        <template>
+            <div $init="i" mount="mods/todo">
+                <input i $ev:change="@tog" $bd:.chk="done" type="checkbox"/>
+                <span i $bd:prio="prio" $bd:.txt="str" $bd:.cls="@cnm"></span>
+                <button i $ev:click="@inc">&plus;</button>
+                <button i $ev:click="@dec">&ndash;</button>
+                <button i $ev:click="@nop">&times;</button>
+            </div>
+        </template>
+
+        <div class="container">
+            <div $init="i" class="head" mount="mods/add">
+                <input i $bd:.v="" $ev:change="@ch" placeholder="Enter Todo"/>
+                <button i $ev:click="@add">+</button>
+            </div>
+
+            <div class="todos" mount="mods/list">
+                <div key="-1">There are no Todos.</div>
+            </div>
+	</div>
+    </body>
+</html>

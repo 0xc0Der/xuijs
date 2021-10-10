@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>counter example</title>
+
+        <link rel="stylesheet" href="main.css" />
+        <script type="module" src="index.js"></script>
+    </head>
+    <body>
+        <div class="cont" style="background-color: darkgray">
+            <div class="cont">
+                <div $init="dec:inc:scr" $bd="&scr" mount="mods/counter">
+                    <button $ev:click="-1" id="dec">dec</button>
+                    <span $bd="" id="scr"></span>
+                    <button $ev:click="+1" id="inc">inc</button>
+                </div>
+
+                <div>
+                    <span $bd="" mount="mods/screen"></span>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

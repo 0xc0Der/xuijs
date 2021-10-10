@@ -1,0 +1,85 @@
+*,
+*::before,
+*::after {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.head {
+  padding: 0.5rem;
+  display: flex;
+  background-color: darkgray;
+  margin: 0.5rem;
+}
+
+.head button,
+.todos button {
+  border: none;
+  padding: 0rem 0.8rem;
+  font-size: xx-large;
+  background-color: lightgray;
+  cursor: pointer;
+  margin-left: 0.3rem;
+}
+
+.head input {
+  width: 100%;
+  outline: none;
+  font-size: medium;
+  border: none;
+  padding: 0.3rem;
+  background-color: whitesmoke;
+}
+
+.todos {
+  display: flex;
+  margin: 0.5rem;
+  padding: 0rem 0.5rem;
+  align-items: center;
+  background-color: darkgray;
+  flex-direction: column;
+}
+
+.todos div {
+  display: flex;
+  align-items: center;
+  margin: 0.5rem;
+  width: 100%;
+  padding: 0.5rem;
+  background-color: white;
+}
+
+.todos div span {
+  width: 100%;
+  padding: 0.3rem;
+  margin: 0.5rem;
+}
+
+.todos div span::before {
+  content: attr(prio);
+  padding: 0.3rem;
+  margin: 0.2rem;
+}
+
+.todos div span.done {
+  text-decoration: line-through;
+}
+
+.todos div span.high::before {
+  color: red;
+}
+
+.todos div span.medium::before {
+  color: darkorange;
+}
+
+.todos div span.low::before {
+  color: darkgreen;
+}

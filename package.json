@@ -1,0 +1,33 @@
+{
+  "name": "xuijs",
+  "version": "1.0.0",
+  "description": "A javascript library for creating reactive user interfaces.",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "module": "./dist/index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "build": "esbuild src/index.js --bundle --outfile=dist/index.js --format=esm --minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0xc0Der/xuijs.git"
+  },
+  "keywords": [
+    "reactive",
+    "ui"
+  ],
+  "author": "0xc0Der",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/0xc0Der/xuijs/issues"
+  },
+  "homepage": "https://github.com/0xc0Der/xuijs#readme",
+  "devDependencies": {
+    "esbuild": "^0.13.4"
+  }
+}
