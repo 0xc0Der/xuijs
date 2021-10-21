@@ -30,5 +30,6 @@ export const Xui = new class {
 }
 
 export { Elem } from './elem.js';
+export { XuiElement } from './xuiElement.js';
 export { Var } from './var.js';
 export { Signal } from './signal.js';

@@ -30,7 +30,7 @@ export const Signal = new class {
         return this.#reg.get(name);
     }
 
-    unRegister(name) {
+    unregister(name) {
         this.#reg.delete(name);
     }
 
@@ -71,6 +71,10 @@ export const Signal = new class {
         for(let name of all) {
             yield this.send(name, info);
         }
+    }
+
+    get(name) {
+        return this.#reg.get(name);
     }
 
 }

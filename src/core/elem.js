@@ -1,10 +1,10 @@
+import { Var } from './var.js';
+import { Signal } from './signal.js';
+
 export class Elem {
+    #vars = {};
 
-    mount(el, data, funcs, handel = name => {
-        const [n, ...p] = name.split(':');
-
-        return [n[0] == '$' ? n.slice(1) : '', ...p];
-    }) {
+    mount(el, data, funcs, handel = this.propFormat) {
         const del = [];
 
         this.#callLSFunc(funcs?.before, el, data);
@@ -29,8 +29,53 @@ export class Elem {
         }
     }
 
-    unMount(el, data, func = 'onUnmount') {
+    unmount(el, data, func = 'onUnmount') {
         this.#callLSFunc(func, el, data);
+    }
+
+    register(name, obj) {
+        return Signal.register(name, obj ?? this);
+    }
+
+    unregister(name) {
+        Signal.unregister(name);
+    }
+
+    send(name, info) {
+        return Signal.send(name, info);
+    }
+
+    prodcast(info, pattern) {
+        return Signal.prodcast(info, pattern);
+    }
+
+    defineData(name, value) {
+        const vr = new Var(value);
+
+        Object.defineProperty(this, name, {
+            set: val => {
+                vr.value = val;
+            },
+            get: () => {
+                return vr.value;
+            }
+        });
+
+        this.#vars[name] = func => vr.observer(func);
+    }
+
+    get(name) {
+        return Signal.get(name);
+    }
+
+    addObserver(vr, func) {
+        this.#vars[vr].call(null, func);
+    }
+
+    propFormat(prop) {
+        const [n, ...p] = prop.split(':');
+
+        return [n[0] == '$' ? n.slice(1) : '', ...p];
     }
 
     #callLSFunc(func, el, data) {
