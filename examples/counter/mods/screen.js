@@ -1,27 +1,23 @@
-import { Elem, Signal, Var } from '../../../src/index.js';
+import { XuiElement } from '../../../src/index.js';
 
-export default class extends Elem {
-    _v = new Var(0);
+export default class extends XuiElement {
 
     constructor(el) {
-        super();
-        this.el = el;
+        super(el);
+
+        this.defineData('val', 0);
+    }
+
+    str(val) {
+        return `${val} is ${val < 0 ? 'negative' : 'positive'}`;
+    }
+
+    cls(val) {
+        return `nut ${val >= 0 ? 'posb' : 'negb'}`;
     }
 
     signal(v) {
-        this._v.value = v;
+        this.val = v;
     }
 
-    bd() {
-        this._v.observer(val => {
-            Object.assign(this.el, {
-                innerText: `${val} is ${ val < 0 ? 'negative' : 'positive' }`,
-                className: `nut ${ val >= 0 ? 'posb' : 'negb' }`
-            });
-        });
-    }
-
-    onMount() {
-        Signal.register('scr', this);
-    }
 }

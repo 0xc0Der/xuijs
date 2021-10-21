@@ -1,41 +1,31 @@
-import { Elem, Signal, Var } from '../../../src/index.js';
+import { XuiElement } from '../../../src/index.js';
 
-export default class extends Elem {
-    _v = new Var(0);
+export default class extends XuiElement {
 
     constructor(el) {
-        super();
-        this.el = el;
+        super(el);
+
+        this.defineData('count', 0);
     }
 
-    init({ value }) {
-        for(let id of value.split(':')) {
-            const el = this.el.querySelector(`[id='${id}']`);
-            this.mount(el, el);
-        }
+    decCount() {
+        this.count -= 1;
     }
 
-    bd({ value }, el) {
-        if(value == '') {
-            this._v.observer(val => {
-                Object.assign(el, {
-                    innerText: val,
-                    className: val >= 0 ? 'pos' : 'neg'
-                });
-            });
-        } else if(value.startsWith('&')) {
-            this._v.observer(val => {
-                Signal.send(value.slice(1), { data: val });
-            });
-        }
+    incCount() {
+        this.count += 1;
     }
 
-    ev({ value, params }, el) {
-        el['on' + params[0]] = () => this._v.value += value * 1;
+    cls(cnt) {
+        return cnt >= 0 ? 'pos': 'neg';
     }
 
     onMount() {
-        this._v.value = 0;
+        this.addObserver('count', val => {
+            this.send('scr', { data: val });
+        });
+
+        this.count = 0;
     }
 
 }

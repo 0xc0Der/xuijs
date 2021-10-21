@@ -11,23 +11,23 @@
     </head>
     <body>
         <template>
-            <div $init="i" mount="mods/todo">
-                <input i $ev:change="@tog" $bd:.chk="done" type="checkbox"/>
-                <span i $bd:prio="prio" $bd:.txt="str" $bd:.cls="@cnm"></span>
-                <button i $ev:click="@inc">&plus;</button>
-                <button i $ev:click="@dec">&ndash;</button>
-                <button i $ev:click="@nop">&times;</button>
+            <div $init $name=".name" mount="mods/todo">
+                <input @change="toggleDone" *.checked="obj.done" type="checkbox"/>
+                <span *prio="obj.prio" *.inner-text="obj.str" *.class-name="obj@cls"></span>
+                <button @click="incPrio">&plus;</button>
+                <button @click="decPrio">&ndash;</button>
+                <button @click="delete">&times;</button>
             </div>
         </template>
 
         <div class="container">
-            <div $init="i" class="head" mount="mods/add">
-                <input i $bd:.v="" $ev:change="@ch" placeholder="Enter Todo"/>
-                <button i $ev:click="@add">+</button>
+            <div $init class="head" mount="mods/add">
+                <input *.value="str" @change="setStr" placeholder="Enter Todo"/>
+                <button @click="addTodo">+</button>
             </div>
 
-            <div class="todos" mount="mods/list">
-                <div key="-1">There are no Todos.</div>
+            <div $init $name="list" class="todos" mount="mods/list">
+                <div *style="list@display">There are no Todos.</div>
             </div>
 	</div>
     </body>

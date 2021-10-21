@@ -1,35 +1,39 @@
-import { Var, Elem, Signal, Xui } from '../../../src/index.js';
+import { XuiElement, Xui } from '../../../src/index.js';
 
-export default class extends Elem {
-    _list = new Var([
-        { str: "first todo", prio: 10, done: true },
-        { str: "second todo", prio: 5, done: false },
-        { str: "third todo", prio: 0, done: false },
-    ]);
+export default class extends XuiElement {
 
     constructor(el) {
-        super();
-        this.el = el;
-        this.template = document.querySelector('template').content;
-        this.getEl = key => el.querySelector(`[key='${key}']`);
+        super(el);
+
+        this.defineData('list', [
+            { str: "first todo", prio: 10, done: true },
+            { str: "second todo", prio: 5, done: false },
+            { str: "third todo", prio: 0, done: false },
+        ]);
     }
 
     async renderList() {
         let key = 0;
+        const getElByKey = key => this.el.querySelector(`[key='${key}']`);
 
-        for(let obj of this._list.value) {
-            this.getEl(key) ?? await this.addElem(key);
+        for(let obj of this.list) {
+            getElByKey(key) ?? await this.addElem(key);
 
-            Signal.send('todo' + key++, { data: obj }); 
+            this.send('todo' + key++, {
+                prefix:'sig',
+                signal:'Set',
+                data: obj
+            }); 
         }
 
-        for(let elm = this.getEl(key); elm; key++, elm = this.getEl(key)) {
-            this.unMount(elm, key);
+        for(let elm = getElByKey(key); elm; key++, elm = getElByKey(key)) {
+            this.get('todo' + key).elem.unmount();
         }
     }
 
     listElem(key) {
-        const todo = this.template.children[0].cloneNode(true);
+        const template = document.querySelector('template').content,
+              todo = template.children[0].cloneNode(true);
 
         todo.setAttribute('key', key);
 
@@ -41,44 +45,39 @@ export default class extends Elem {
               ctrl = await Xui.loader(todo);
 
         this.el.appendChild(todo);
-        ctrl.mount(todo, null, { after: 'onMount' });
+
+        ctrl.mount(todo, { key, name: 'todo' + key }, {
+            before: 'onBeforeMount'
+        });
     }
 
     updateList() {
-        this._list.value = this._list.value
-            .sort((a, b) => b.prio - a.prio)
-            .sort((a, b) => a.done - b.done);
+        this.list = this.list.sort((a, b) => b.prio - a.prio)
+                             .sort((a, b) => a.done - b.done);
     }
 
     sigAdd(obj) {
-        obj.str && this._list.value.push(obj);
+        obj.str && this.list.push(obj);
     }
 
     sigChange([idx, val]) {
         if(Object.keys(val).length == 0) {
-            this._list.value.splice(idx, 1);
+            this.list.splice(idx, 1);
         } else {
-            Object.assign(this._list.value[idx], val);
+            Object.assign(this.list[idx], val);
         }
     }
 
-    onMount() {
-        Signal.register("list", this).finally(() => this.updateList());
-
-        this._list.observer(() => this.renderList());
-
-        this._list.observer(val => {
-            this.getEl(-1).style.display = `${
-                val.length == 0 ? 'block' : 'none'
-            }`;
-        });
-
-        this.updateList();
+    display(val) {
+        return val.length != 0 && 'display: none';
     }
 
-    onUnmount(el, key) {
-        Signal.unRegister('todo' + key);
-        el.remove();
+    onMount() {
+        this.get('list').finally(() => this.updateList());
+
+        this.addObserver('list', () => this.renderList());
+
+        this.updateList();
     }
 
 }
