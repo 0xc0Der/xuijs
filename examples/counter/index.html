@@ -12,13 +12,21 @@
         <div class="cont" style="background-color: darkgray">
             <div class="cont">
                 <div $init mount="mods/counter">
-                    <button @click="decCount">dec</button>
-                    <span *.inner-text="count" *.class-name="count@cls"></span>
-                    <button @click="incCount">inc</button>
+                    <button $event:click="@decCount">dec</button>
+                    <span
+                        $bind:.inner-text="count@getCount"
+                        $bind:.class-name="count@className"
+                    ></span>
+                    <button $event:click="@incCount">inc</button>
                 </div>
 
                 <div>
-                    <span *.inner-text="val@str" *.class-name="val@cls" $name="scr" mount="mods/screen"></span>
+                    <span
+                        $bind:.inner-text="count@getSignStr"
+                        $bind:.class-name="count@className"
+                        $name="signString"
+                        mount="mods/screen"
+                    ></span>
                 </div>
             </div>
         </div>

@@ -1,23 +1,23 @@
-import { XuiElement } from '../../../src/index.js';
+import { XuiElement, Variable } from '../../../src/index.js';
 
 export default class extends XuiElement {
 
     constructor(el) {
         super(el);
 
-        this.defineData('val', 0);
+        this.count = new Variable(0);
     }
 
-    str(val) {
+    getSignStr(val) {
         return `${val} is ${val < 0 ? 'negative' : 'positive'}`;
     }
 
-    cls(val) {
+    className(val) {
         return `nut ${val >= 0 ? 'posb' : 'negb'}`;
     }
 
-    signal(v) {
-        this.val = v;
+    sigSetStr(val) {
+        this.count.value = val;
     }
 
 }

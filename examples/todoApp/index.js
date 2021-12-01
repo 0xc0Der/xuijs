@@ -1,3 +1,7 @@
-import { Xui } from '../../src/index.js';
+import { Xui, SignalsDispatcher } from '../../src/index.js';
 
-Xui.init(document.body);
+window.Signals = new SignalsDispatcher();
+
+const App = new Xui();
+
+App.init(document.body);

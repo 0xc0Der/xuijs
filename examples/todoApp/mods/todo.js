@@ -1,47 +1,58 @@
-import { XuiElement } from '../../../src/index.js';
+import { XuiElement, Variable } from '../../../src/index.js';
 
 export default class extends XuiElement {
 
     constructor(el) {
         super(el);
 
-        this.defineData('obj', {});
+        this.todo = new Variable({});
     }
 
     sendChangeSig(data) {
-        this.send('list', {
-            prefix:'sig',
-            signal: 'Change',
+        Signals.send('list', {
+            signal: 'sigChange',
             data: [this.key, data]
          });
     }
 
     incPrio() {
-        this.sendChangeSig({ prio: this.obj.prio + 1 });
+        this.sendChangeSig({ prio: this.todo.value.prio + 1 });
     }
 
     decPrio() {
-        this.sendChangeSig({ prio: this.obj.prio - 1 });
+        this.sendChangeSig({ prio: this.todo.value.prio - 1 });
     }
 
     toggleDone() {
-        this.sendChangeSig({ done: !this.obj.done });
+        this.sendChangeSig({ done: !this.todo.value.done });
     }
 
-    delete() {
+    deleteTodo() {
         return this.sendChangeSig({});
     }
 
-    cls(obj){
+    getPrio(todo) {
+        return todo.prio;
+    }
+
+    getStr(todo) {
+        return todo.str;
+    }
+
+    getDone(todo) {
+        return todo.done;
+    }
+
+    className(todo){
         return `${
-            obj.prio < 5 ? 'low' : obj.prio < 10 ? 'medium' : 'high'
+            todo.prio < 5 ? 'low' : todo.prio < 10 ? 'medium' : 'high'
         }${
-            obj.done ? ' done' : ''
+            todo.done ? ' done' : ''
         }`
     }
 
     sigSet(data) {
-        this.obj = data;
+        this.todo.value = data;
     }
 
     onBeforeMount(_, data) {
@@ -50,7 +61,7 @@ export default class extends XuiElement {
     }
 
     onUnmount() {
-        this.unregister(this.name);
+        Signals.unregister(this.name);
         this.el.remove();
     }
 

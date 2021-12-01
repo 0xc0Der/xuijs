@@ -1,4 +1,4 @@
-export class Var {
+export default class Variable {
     #funcs = [];
     #value;
 
@@ -18,7 +18,7 @@ export class Var {
         return this.#value;
     }
 
-    observer(fun) {
+    addObserver(fun) {
         this.#funcs.push(fun);
     }
 

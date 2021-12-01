@@ -1,31 +1,35 @@
-import { XuiElement } from '../../../src/index.js';
+import { XuiElement, Variable } from '../../../src/index.js';
 
 export default class extends XuiElement {
 
     constructor(el) {
         super(el);
 
-        this.defineData('count', 0);
+        this.count = new Variable(0);
+    }
+
+    getCount(count) {
+        return `count is: ${count}`;
     }
 
     decCount() {
-        this.count -= 1;
+        this.count.value -= 1;
     }
 
     incCount() {
-        this.count += 1;
+        this.count.value += 1;
     }
 
-    cls(cnt) {
-        return cnt >= 0 ? 'pos': 'neg';
+    className(count) {
+        return count >= 0 ? 'pos': 'neg';
     }
 
     onMount() {
-        this.addObserver('count', val => {
-            this.send('scr', { data: val });
+        this.count.addObserver(val => {
+            Signals.send('signString', { signal: 'sigSetStr', data: val });
         });
 
-        this.count = 0;
+        this.count.value = 0;
     }
 
 }

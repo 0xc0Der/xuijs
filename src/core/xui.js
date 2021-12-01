@@ -1,5 +1,5 @@
-export const Xui = new class {
-    attr = 'mount';
+export default class Xui {
+    selector = 'mount';
 
     async init(
         elem,
@@ -7,29 +7,24 @@ export const Xui = new class {
         funcs = {
             after: 'onMount',
             before: 'onBeforeMount'
-        },
-        handel
+        }
     ) {
-        for(let mnt of elem.querySelectorAll(`[${this.attr}]`)) {
-            (await this.loader(mnt)).mount(mnt, data, funcs, handel);
+        for(let mnt of elem.querySelectorAll(`[${this.selector}]`)) {
+            (await this.loadClass(mnt)).mount(mnt, data, funcs);
         }
     }
 
-    async loader(elem) {
+    async loadClass(elem) {
         const [
             ctrl,
             cls = 'default'
-        ] = elem.getAttribute(this.attr).split(':'),
-            mod = await import(document.baseURI + ctrl + '.js');
+	] = elem.getAttribute(this.selector).split(':');
 
-        elem.removeAttribute(this.attr);
+        const mod = await import(document.baseURI + (ctrl || 'index') + '.js');
+
+        elem.removeAttribute(this.selector);
 
         return new mod[cls](elem);
     }
 
 }
-
-export { Elem } from './elem.js';
-export { XuiElement } from './xuiElement.js';
-export { Var } from './var.js';
-export { Signal } from './signal.js';

@@ -1,29 +1,32 @@
-import { XuiElement } from '../../../src/index.js';
+import { XuiElement, Variable } from '../../../src/index.js';
 
 export default class extends XuiElement {
 
     constructor(el) {
         super(el);
 
-        this.defineData('str', '');
+        this.str = new Variable('');
     }
 
     addTodo() {
-        this.send('list', {
-            prefix: 'sig',
-            signal: 'Add',
+        Signals.send('list', {
+            signal: 'sigAdd',
             data: {
-                str: this.str,
+                str: this.str.value,
                 prio: 0,
                 done: false
             }
         });
 
-        this.str = '';
+        this.str.value = '';
     }
- 
+
+    getStr(str) {
+        return str;
+    }
+
     setStr(e) {
-        this.str = e.target.value;
+        this.str.value = e.target.value;
     }
 
 }
