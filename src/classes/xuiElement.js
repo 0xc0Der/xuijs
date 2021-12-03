@@ -1,6 +1,9 @@
 import BaseElement from '../core/baseElement.js'
+import Scope from './utils/scope.js';
+import { renderList } from './utils/renderList.js';
 
 export default class XuiElement extends BaseElement {
+    #scopes = {};
 
     constructor(el) {
         super();
@@ -56,13 +59,66 @@ export default class XuiElement extends BaseElement {
         }
     }
 
-    $name({ value }) {
-        const name = value.variable;
+    $name({ value }, el = this.el) {
+        const { variable: name, func: sigDispt } = value;
 
-        Signals.register(
+        if(el !== this.el) {
+            throw new Error('invalid $name attribute.');
+        }
+
+        window[sigDispt].register(
             name.startsWith('.') ? this[name.slice(1)] : name,
             this
         );
+    }
+
+    $if({ value, params }, el = this.el) {
+        const [scope] = params;
+        const { variable, func } = value;
+
+        if(!this.#scopes.hasOwnProperty(scope)) {
+            this.#scopes[scope] = new Scope(scope);
+        }
+
+        this.#scopes[scope].addIf(this[func]);
+
+        this[variable].addObserver(val => {
+            this.#scopes[scope].run(val, el);
+        });
+    }
+
+    $else({ value, params }, el = this.el) {
+        const [scope] = params;
+        const { func } = value;
+
+        if(!this.#scopes.hasOwnProperty(scope)) {
+            throw new Error(`scope "${scope}" is undefined.`);
+        }
+
+        this.#scopes[scope].addElse(this[func]);
+    }
+
+    $for({ value, params }, el = this.el) {
+        const [name] = params;
+        const { func, variable } = value;
+
+        if(el.children.length !== 1) {
+            throw new Error('$for block must have exactly one child.');
+        }
+
+        const template = el.children[0].cloneNode(true);
+
+        el.children[0].remove();
+
+        this[variable].addObserver(list => {
+            renderList(
+                list,
+                name.startsWith('.') ? this[name.slice(1)] : name,
+                this[func],
+                template,
+                el
+            );
+        });
     }
 
 }

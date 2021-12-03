@@ -11,7 +11,7 @@ export default class extends XuiElement {
     sendChangeSig(data) {
         Signals.send('list', {
             signal: 'sigChange',
-            data: [this.key, data]
+            data: { idx: this.key, val: data }
          });
     }
 

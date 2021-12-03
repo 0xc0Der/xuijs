@@ -10,25 +10,7 @@
         <script type="module" src="index.js"></script>
     </head>
     <body>
-        <template>
-            <div $init $name=".name" mount="mods/todo">
-                <input
-                    $event:change="@toggleDone"
-                    $bind:.checked="todo@getDone"
-                    type="checkbox"
-                />
-                <span
-                    $bind:prio="todo@getPrio"
-                    $bind:.inner-text="todo@getStr"
-                    $bind:.class-name="todo@className"
-                ></span>
-                <button $event:click="@incPrio">&plus;</button>
-                <button $event:click="@decPrio">&ndash;</button>
-                <button $event:click="@deleteTodo">&times;</button>
-            </div>
-        </template>
-
-        <div class="container">
+        <div>
             <div $init class="head" mount="mods/add">
                 <input
                     $bind:.value="str@getStr"
@@ -38,8 +20,28 @@
                 <button $event:click="@addTodo">+</button>
             </div>
 
-            <div $init $name="list" class="todos" mount="mods/list">
-                <div $bind:style="list@toggleDisplay">There are no Todos.</div>
+            <div $init $name="list@Signals" mount="mods/list" >
+                <div class="no-todos" $bind:style="list@toggleDisplay">
+                    There are no TODOs.
+                </div>
+
+                <div class="todos" $for:todo="list@LCMethods">
+                    <div $init $name=".name@Signals" prevent mount="mods/todo">
+                        <input
+                            $event:change="@toggleDone"
+                            $bind:.checked="todo@getDone"
+                            type="checkbox"
+                        />
+                        <span
+                            $bind:prio="todo@getPrio"
+                            $bind:.inner-text="todo@getStr"
+                            $bind:.class-name="todo@className"
+                        ></span>
+                        <button $event:click="@incPrio">&plus;</button>
+                        <button $event:click="@decPrio">&ndash;</button>
+                        <button $event:click="@deleteTodo">&times;</button>
+                    </div>
+                </div>
             </div>
         </div>
     </body>

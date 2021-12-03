@@ -38,6 +38,12 @@ body {
   background-color: whitesmoke;
 }
 
+.no-todos {
+  text-align: center;
+  margin: 0.5rem;
+  padding: 0rem 0.5rem;
+}
+
 .todos {
   display: flex;
   margin: 0.5rem;
