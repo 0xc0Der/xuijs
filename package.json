@@ -1,6 +1,6 @@
 {
   "name": "xuijs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A javascript runtime library for creating reactive user interfaces.",
   "type": "module",
   "module": "./src/index.js",
