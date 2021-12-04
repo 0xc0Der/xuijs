@@ -1,7 +1,7 @@
 {
   "name": "xuijs",
   "version": "1.0.0",
-  "description": "A javascript library for creating reactive user interfaces.",
+  "description": "A javascript runtime library for creating reactive user interfaces.",
   "type": "module",
   "module": "./src/index.js",
   "files": [
@@ -16,7 +16,8 @@
   },
   "keywords": [
     "reactive",
-    "ui"
+    "ui",
+    "runtime"
   ],
   "author": "0xc0Der",
   "license": "MIT",
