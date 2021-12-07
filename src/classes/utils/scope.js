@@ -1,47 +1,54 @@
 export default class Scope {
-    #funcs = {};
+    #funcs = [];
     #name;
+    #state;
 
     constructor(name) {
         this.#name = name;
     }
 
-    addIf(func) {
-        if(this.hasIf()) {
-            throw new Error(`scope ${this.name} aleady has "if".`);
-        } else {
-            this.#funcs['if'] = func;
+    open(name, func) {
+        if(this.#state !== undefined) {
+            throw new Error(`can't reopen scope ${this.#name}.`);
         }
+
+        this.#state = 1;
+        this.#funcs.push({ name, func });
     }
 
-    addElse(func) {
-        if(this.hasElse()) {
-            throw new Error(`scope ${this.name} aleady has "else".`);
-        } else {
-            this.#funcs['else'] = func;
+    close(name, func) {
+        if(this.#state !== 1) {
+            throw new Error(`scope ${this.#name} is not open.`);
         }
+
+        this.#state = 0;
+        this.#funcs.push({ name, func });
+
     }
 
-    run(value, el) {
-        const ifRes = this.#funcs['if'](value, el);
-
-        if(ifRes === false) {
-                this.#funcs['else']?.(value, el);
-        } else if(typeof ifRes === 'function') {
-            ifRes();
-        } else {
-            throw new Error(`"if" return value must be function or false.`);
+    add(name, func) {
+        if(this.#state !== 1) {
+            throw new Error(`scope ${this.#name} is not open.`);
         }
+
+        this.#funcs.push({ name, func });
     }
 
-    hasIf() {
-        return this.hasOwnProperty('if');
-    }
+    run(value) {
+        for(let dir of this.#funcs) {
+            const res = dir.func(value);
 
-    hasElse() {
-        return this.hasOwnProperty('else');
+            if(res === false) {
+                continue;
+            } else if(typeof res === 'function') {
+                res();
+                break;
+            } else {
+                throw new Error(
+                    `scope ${this.#name}: invalid return type in ${func.name}.`
+                );
+            }
+        }
     }
 
 }
-
-

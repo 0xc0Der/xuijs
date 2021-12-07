@@ -80,11 +80,22 @@ export default class XuiElement extends BaseElement {
             this.#scopes[scope] = new Scope(scope);
         }
 
-        this.#scopes[scope].addIf(this[func]);
+        this.#scopes[scope].open('if', value => this[func](value, el));
 
         this[variable].addObserver(val => {
-            this.#scopes[scope].run(val, el);
+            this.#scopes[scope].run(val);
         });
+    }
+
+    $elif({ value, params }, el = this.el) {
+        const [scope] = params;
+        const { func } = value;
+
+        if(!this.#scopes.hasOwnProperty(scope)) {
+            throw new Error(`scope "${scope}" is undefined.`);
+        }
+
+        this.#scopes[scope].add('elif', value => this[func](value, el));
     }
 
     $else({ value, params }, el = this.el) {
@@ -95,7 +106,11 @@ export default class XuiElement extends BaseElement {
             throw new Error(`scope "${scope}" is undefined.`);
         }
 
-        this.#scopes[scope].addElse(this[func]);
+        this.#scopes[scope].close('else', value => {
+            this[func](value, el);
+
+            return false;
+        });
     }
 
     $for({ value, params }, el = this.el) {
