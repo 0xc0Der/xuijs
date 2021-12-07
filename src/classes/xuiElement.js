@@ -29,7 +29,13 @@ export default class XuiElement extends BaseElement {
         return { func, params };
     }
 
-    $init(_, el = this.el) {
+    $init({ value }, el = this.el) {
+        const { variable: scope } = value;
+
+        if(scope) {
+            el.setAttribute('scope', scope);
+        }
+
         for(let child of el.children) {
             for(let attr of this.handelAttributes(child)) {
                 attr.ownerElement.removeAttribute(attr.nodeName);
@@ -73,7 +79,7 @@ export default class XuiElement extends BaseElement {
     }
 
     $if({ value, params }, el = this.el) {
-        const [scope] = params;
+        const scope = params[0] || el.parentElement.getAttribute('scope');
         const { variable, func } = value;
 
         if(!this.#scopes.hasOwnProperty(scope)) {
@@ -88,7 +94,7 @@ export default class XuiElement extends BaseElement {
     }
 
     $elif({ value, params }, el = this.el) {
-        const [scope] = params;
+        const scope = params[0] || el.parentElement.getAttribute('scope');
         const { func } = value;
 
         if(!this.#scopes.hasOwnProperty(scope)) {
@@ -99,7 +105,7 @@ export default class XuiElement extends BaseElement {
     }
 
     $else({ value, params }, el = this.el) {
-        const [scope] = params;
+        const scope = params[0] || el.parentElement.getAttribute('scope');
         const { func } = value;
 
         if(!this.#scopes.hasOwnProperty(scope)) {
