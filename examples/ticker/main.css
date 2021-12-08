@@ -1,0 +1,40 @@
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  background-color: whitesmoke;
+  padding: 0.5rem;
+  font-size: 8rem;
+  text-align: center;
+}
+
+.container span:after {
+  content: "ticks";
+  color: gray;
+  font-size: medium;
+}
+
+.container .controls {
+  display: flex;
+  background-color: gray;
+  margin: 0.5rem;
+}
+
+.controls button {
+  border: none;
+  font-size: medium;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  width: 100%;
+}
