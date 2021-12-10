@@ -3,18 +3,7 @@ export default class SignalsDispatcher {
     #defered = new Map();
 
     register(name, elem) {
-        this.#registered.set(name, {
-            element: elem,
-            finally(func) {
-                if(typeof func === 'function') {
-                    this.func = func;
-                } else {
-                    throw new TypeError(
-                        `"finally" expects a FUNCTION: got ${typeof func}.`
-                    );
-                }
-            }
-        });
+        this.#registered.set(name, elem);
 
         if(this.isDefered(name)) {
             for(let func of this.getDefered(name)) {
@@ -36,11 +25,11 @@ export default class SignalsDispatcher {
     #exec(name, info) {
         const { signal, data } = info;
 
-        return this.getRegistered(name).element[signal]?.(data);
+        return this.getRegistered(name)[signal]?.(data);
     }
 
     send(name, info) {
-        const ret = this.isRegistered(name)
+        return this.isRegistered(name)
             ? Promise.resolve(this.#exec(name, info))
             : new Promise(rslv => {
                 this.isDefered(name) || this.#defered.set(name, []);
@@ -49,12 +38,6 @@ export default class SignalsDispatcher {
                     rslv(this.#exec(name, info));
                 });
             });
-
-        return ret.then(val => {
-            this.getRegistered(name).func?.(val);
-
-            return val;
-        });
     }
 
     *prodcast(info, pattern = /.+/) {
