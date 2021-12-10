@@ -1,6 +1,5 @@
 import BaseElement from '../core/baseElement.js'
 import Scope from './utils/scope.js';
-import { renderList } from './utils/renderList.js';
 
 export default class XuiElement extends BaseElement {
     #scopes = {};
@@ -55,12 +54,12 @@ export default class XuiElement extends BaseElement {
         const toCap = prop => prop.replace(/-[a-z]/g, m => m[1].toUpperCase());
 
         if(prop.startsWith('.')) {
-            this[variable].addObserver(val => {
-                el[toCap(prop).slice(1)] = this[func](val);
+            this[variable].addObserver((val, oldVal) => {
+                el[toCap(prop).slice(1)] = this[func](val, oldVal);
             });
         } else {
-            this[variable].addObserver(val => {
-                el.setAttribute(prop, this[func](val));
+            this[variable].addObserver((val, oldVal) => {
+                el.setAttribute(prop, this[func](val, oldVal));
             });
         }
     }
@@ -86,10 +85,12 @@ export default class XuiElement extends BaseElement {
             this.#scopes[scope] = new Scope(scope);
         }
 
-        this.#scopes[scope].open('if', value => this[func](value, el));
+        this.#scopes[scope].open('if', (value, oldValue) => {
+            return this[func]({ value, oldValue }, el)
+        });
 
-        this[variable].addObserver(val => {
-            this.#scopes[scope].run(val);
+        this[variable].addObserver((val, oldVal) => {
+            this.#scopes[scope].run(val, oldVal);
         });
     }
 
@@ -101,7 +102,9 @@ export default class XuiElement extends BaseElement {
             throw new Error(`scope "${scope}" is undefined.`);
         }
 
-        this.#scopes[scope].add('elif', value => this[func](value, el));
+        this.#scopes[scope].open('elif', (value, oldValue) => {
+            return this[func]({ value, oldValue }, el)
+        });
     }
 
     $else({ value, params }, el = this.el) {
@@ -112,8 +115,8 @@ export default class XuiElement extends BaseElement {
             throw new Error(`scope "${scope}" is undefined.`);
         }
 
-        this.#scopes[scope].close('else', value => {
-            this[func](value, el);
+        this.#scopes[scope].close('else', (value, oldValue) => {
+            this[func]({ value, oldValue }, el);
 
             return false;
         });
@@ -123,22 +126,12 @@ export default class XuiElement extends BaseElement {
         const [name] = params;
         const { func, variable } = value;
 
-        if(el.children.length !== 1) {
-            throw new Error('$for block must have exactly one child.');
-        }
+        this[variable].addObserver((list, oldList) => {
+            const body = this[func](name, { list, oldList }, el);
 
-        const template = el.children[0].cloneNode(true);
-
-        el.children[0].remove();
-
-        this[variable].addObserver(list => {
-            renderList(
-                list,
-                name.startsWith('.') ? this[name.slice(1)] : name,
-                this[func],
-                template,
-                el
-            );
+            for(let [key, value] of Object.entries(list)) {
+                body({ key, value });
+            }
         });
     }
 

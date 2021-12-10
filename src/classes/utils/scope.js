@@ -34,9 +34,9 @@ export default class Scope {
         this.#funcs.push({ name, func });
     }
 
-    run(value) {
+    run(value, oldValue) {
         for(let dir of this.#funcs) {
-            const res = dir.func(value);
+            const res = dir.func(value, oldValue);
 
             if(res === false) {
                 continue;
