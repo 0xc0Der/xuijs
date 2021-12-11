@@ -11,7 +11,7 @@ export default class extends XuiElement {
     sendChangeSig(data) {
         Signals.send('list', {
             signal: 'sigChange',
-            data: { idx: this.key, val: data }
+            data: { idx: this.name.split(' - ')[1], val: data }
          });
     }
 
@@ -55,9 +55,8 @@ export default class extends XuiElement {
         this.todo.value = data;
     }
 
-    onBeforeMount(_, data) {
-        this.key = data.key;
-        this.name = data.name;
+    onBeforeMount(_, name) {
+        this.name = name;
     }
 
     onUnmount() {

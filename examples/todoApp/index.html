@@ -25,7 +25,7 @@
                     There are no TODOs.
                 </div>
 
-                <div class="todos" $for:todo="list@LCMethods">
+                <div class="todos" $for:todo="list@renderTodoList">
                     <div $init $name=".name@Signals" prevent mount="mods/todo">
                         <input
                             $event:change="@toggleDone"
