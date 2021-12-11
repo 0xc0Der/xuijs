@@ -41,30 +41,29 @@ export class [class name] extends XuiElement {
 
 predefined attributes in `XuiElement` are:
 
-`$init`, `$bind`, `$event`, `$name`, `$for`, `$if`, `$else`
+`$init`, `$bind`, `$event`, `$name`, `$for`, `$if`, `$elif`, `$else`
 
-1. `$bind`.
+## `$bind`.
 
 format: `$bind:.prop-name|attr-name="variable@function"`.
 
 binds the property value `ex. .inner-text` or the attribute value `ex. class` to the return value of the `function` which takes the current value of the `variable` as an argument.
 
-2. `$event`.
+## `$event`.
 
 format: `$event:event-name="@function"`.
 
 the `function` is an event handeler that takes the `event` as an argumant.
 
-3. `$init`.
+## `$init`.
 
-format: `$init=""`.
+format: `$init="[scope]"`.
 
-it is used to initialize the child elements.
+it is used to initialize the child elements of the holder element.
 
-if the elmement has children or a child has children that need to be handeled.
-add this attribute.
+- `scope` is optional.
 
-4. `$name`.
+## `$name`.
 
 format: `$name=".name|name@SignalsDispatcher"`.
 
@@ -72,43 +71,42 @@ it is used to register an elment in a `SignalsDispatcher`.
 
 - `.name` means the value of the variable `name`.
 
-5. `$for`.
+## `$for`.
 
 format: `$for:key-prefix="variable@function"`.
 
-loop over the values of `variable: Object|Array`.
+loop over the values of `variable`.
 
-`function` returns an object.
+`function = function(keyPrefix, { list, oldList }, el)` returns another `function = function({ key, value })` that runs for each element.
 
-```js
+## `$if`.
 
-// key format 'key-prefix - index'.
+format: `$if[:scope-name]="variable@function"`.
 
-{
-  setup: (key, parentDOMElement) => {}, // on creation of the list element.
-  render: (key, value) => {}, // on every render of the element.
-  cleanup: (key) => {}, // on element cleanup 'eg. removal'.
-}
+the `function` returns `false` or a `function` which represent the body of `if`.
 
-```
+- `function = function(VariableValue, DOMElement)`.
+- the returned function takes no arguments.
+- scope is optional if it is defined in `$init`.
 
-6. `$if`.
+## `$elif`.
 
-format: `$if:scope-name="variable@function"`.
+format: `$elif[:scope-name]="@function"`.
 
-the `function` returns `false`. in that case `else` get executed if it exists,
-or a `function` which represent the body of `if`.
+should be in the same scope as its `if`.
+
+the `function` returns `false` or a `function` which represent the body of `elif`.
 
 - `function = function(VariableValue, DOMElement)`.
 - the returned function takes no arguments.
 
-7. `$else`.
+## `$else`.
 
-format: `$else:scope-name="@function"`.
+format: `$else[:scope-name]="@function"`.
 
 should be in the same scope as its `if`.
 
-`function = function(VariableValue, DOMElement)`.
+- `function = function(VariableValue, DOMElement)`.
 
 # custom attributes
 
@@ -135,11 +133,11 @@ export class MyElement extends XuiElement {
 
 ```
 
-the use it in the HTML.
+then use it in the HTML.
 
 ```html
 
-<div $myattr:param:...="variable@func"></div>
+<div $myattr[:param:...]="variable@func"></div>
 
 ```
 
@@ -194,17 +192,16 @@ send or prodcast a signal.
 
 ```js
 
-const returnValue = Signals.send('name', {
+const returnValuePromise = Signals.send('name', {
   signals: 'signalName',
   data: 'data to send'
 });
 
 // to prodcat to all registered.
-
-const iterator = Signals.prodcast({
+const iteratorOfPromises = Signals.prodcast({
   signal: 'signalName',
   data: 'data to send'
-}/*, optional regex*/);
+}/* , optional regex */);
 
 ```
 
