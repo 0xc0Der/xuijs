@@ -1,6 +1,6 @@
 export default class Xui {
-    mount = 'mount'
-    prevent = 'prevent'
+    mount = 'mount';
+    prevent = 'prevent';
     selector = `[${this.mount}]:not([${this.prevent}])`;
 
     async init(
@@ -11,22 +11,19 @@ export default class Xui {
             before: 'onBeforeMount'
         }
     ) {
-        for(let mnt of elem.querySelectorAll(this.selector)) {
+        for (let mnt of elem.querySelectorAll(this.selector)) {
             (await this.loadClass(mnt)).mount(mnt, data, funcs);
         }
     }
 
     async loadClass(elem) {
-        if(!elem.hasAttribute(this.mount)) {
-            throw new Error(
-                `element doesn't have "${this.mount}" attribute.`
-            );
+        if (!elem.hasAttribute(this.mount)) {
+            throw new Error(`element doesn't have "${this.mount}" attribute.`);
         }
 
-        const [
-            ctrl,
-            cls = 'default'
-        ] = elem.getAttribute(this.mount).split(':');
+        const [ctrl, cls = 'default'] = elem
+            .getAttribute(this.mount)
+            .split(':');
 
         const mod = await import(document.baseURI + (ctrl || 'index') + '.js');
 
@@ -35,5 +32,4 @@ export default class Xui {
 
         return new mod[cls](elem);
     }
-
 }

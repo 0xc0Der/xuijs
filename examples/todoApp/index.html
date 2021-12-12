@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" href="">
+        <link rel="icon" href="" />
         <title>todoApp</title>
 
         <link rel="stylesheet" href="main.css" />
@@ -20,7 +20,7 @@
                 <button $event:click="@addTodo">+</button>
             </div>
 
-            <div $init $name="list@Signals" mount="mods/list" >
+            <div $init $name="list@Signals" mount="mods/list">
                 <div class="no-todos" $bind:style="list@toggleDisplay">
                     There are no TODOs.
                 </div>

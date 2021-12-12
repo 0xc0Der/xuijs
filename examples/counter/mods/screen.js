@@ -1,7 +1,6 @@
 import { XuiElement, Variable } from '../../../src/index.js';
 
 export default class extends XuiElement {
-
     constructor(el) {
         super(el);
 
@@ -19,5 +18,4 @@ export default class extends XuiElement {
     sigSetStr(val) {
         this.count.value = val;
     }
-
 }

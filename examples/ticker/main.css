@@ -20,7 +20,7 @@ body {
 }
 
 .container span:after {
-  content: "ticks";
+  content: 'ticks';
   color: gray;
   font-size: medium;
 }

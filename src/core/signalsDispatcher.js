@@ -5,8 +5,8 @@ export default class SignalsDispatcher {
     register(name, elem) {
         this.#registered.set(name, elem);
 
-        if(this.isDefered(name)) {
-            for(let func of this.getDefered(name)) {
+        if (this.isDefered(name)) {
+            for (let func of this.getDefered(name)) {
                 func();
             }
 
@@ -17,7 +17,7 @@ export default class SignalsDispatcher {
     }
 
     unregister(name) {
-        if(this.isRegistered(name)) {
+        if (this.isRegistered(name)) {
             this.#registered.delete(name);
         }
     }
@@ -32,12 +32,12 @@ export default class SignalsDispatcher {
         return this.isRegistered(name)
             ? Promise.resolve(this.#exec(name, info))
             : new Promise(rslv => {
-                this.isDefered(name) || this.#defered.set(name, []);
+                  this.isDefered(name) || this.#defered.set(name, []);
 
-                this.getDefered(name).push(() => {
-                    rslv(this.#exec(name, info));
-                });
-            });
+                  this.getDefered(name).push(() => {
+                      rslv(this.#exec(name, info));
+                  });
+              });
     }
 
     *prodcast(info, pattern = /.+/) {
@@ -46,7 +46,7 @@ export default class SignalsDispatcher {
             ...this.#defered.keys()
         ].filter(name => pattern.test(name));
 
-        for(let name of all) {
+        for (let name of all) {
             yield this.send(name, info);
         }
     }
@@ -60,7 +60,7 @@ export default class SignalsDispatcher {
     }
 
     getDefered(name) {
-        if(this.isDefered(name)) {
+        if (this.isDefered(name)) {
             return this.#defered.get(name);
         } else {
             throw new Error(`${name} is not defered.`);
@@ -68,11 +68,10 @@ export default class SignalsDispatcher {
     }
 
     getRegistered(name) {
-        if(this.isRegistered(name)) {
+        if (this.isRegistered(name)) {
             return this.#registered.get(name);
         } else {
             throw new Error(`${name} is not registered.`);
         }
     }
-
 }

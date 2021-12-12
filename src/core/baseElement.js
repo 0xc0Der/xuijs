@@ -1,9 +1,8 @@
 export default class BaseElement {
-
     mount(el, data, funcs) {
         this.#callLifeCycleMethod(funcs?.before, el, data);
 
-        for(let attr of this.handelAttributes(el)) {
+        for (let attr of this.handelAttributes(el)) {
             attr.ownerElement.removeAttribute(attr.nodeName);
         }
 
@@ -17,16 +16,19 @@ export default class BaseElement {
     handelAttributes(el) {
         const attrs = [];
 
-        for(let attr of this.attrsFilter(el.attributes)) {
+        for (let attr of this.attrsFilter(el.attributes)) {
             const { func, params } = this.attrNameParser(attr.nodeName);
 
-            if(this[func]) {
+            if (this[func]) {
                 attrs.push(attr);
 
-                this[func]({
-                    value: this.attrValueParser(attr.nodeValue),
-                    params
-                }, el);
+                this[func](
+                    {
+                        value: this.attrValueParser(attr.nodeValue),
+                        params
+                    },
+                    el
+                );
             } else {
                 throw new Error(`${func} not defined.`);
             }
@@ -36,11 +38,10 @@ export default class BaseElement {
     }
 
     #callLifeCycleMethod(func, el, data) {
-        if(typeof func === 'string' && this[func]) {
+        if (typeof func === 'string' && this[func]) {
             this[func](el, data);
-        } else if(typeof func === 'function') {
+        } else if (typeof func === 'function') {
             func(el, data);
         }
     }
-
 }

@@ -1,7 +1,6 @@
 import { XuiElement, Variable } from '../../../src/index.js';
 
 export default class extends XuiElement {
-
     constructor(el) {
         super(el);
 
@@ -21,7 +20,7 @@ export default class extends XuiElement {
     }
 
     className(count) {
-        return count >= 0 ? 'pos': 'neg';
+        return count >= 0 ? 'pos' : 'neg';
     }
 
     onMount() {
@@ -31,5 +30,4 @@ export default class extends XuiElement {
 
         this.count.value = 0;
     }
-
 }

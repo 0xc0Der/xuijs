@@ -1,21 +1,18 @@
 # initializing your app
 
 ```js
-
 import { Xui } from 'xuijs';
 
 const App = new Xui();
 
 App.init(rootElement);
-
 ```
 
 # mounting an element
 
 ```html
-
-<div mount="[file/path][:class]"></div> <!-- no file extension -->
-
+<div mount="[file/path][:class]"></div>
+<!-- no file extension -->
 ```
 
 - if no file path given it will default to `./index.js`.
@@ -113,38 +110,30 @@ should be in the same scope as its `if`.
 inside the element define a function on the form `$attrname`.
 
 ```js
-
 export class MyElement extends XuiElement {
   // ...
 
-  $myattr({ params, value}, el) {
+  $myattr({ params, value }, el) {
     // `params` is an array.
-
     // `value` is an object { variable, func }.
     // assuming that `value` takes the form `variable@func`.
-
     // `el` is the DOM element.
-
     // implementation.
   }
 
   // ...
 }
-
 ```
 
 then use it in the HTML.
 
 ```html
-
 <div $myattr[:param:...]="variable@func"></div>
-
 ```
 
 # variables
 
 ```js
-
 import { Variable } from 'xuijs';
 
 export class MyElement extends XuiElement {
@@ -163,9 +152,7 @@ export class MyElement extends XuiElement {
       // gets called whenever `myVar` changes.
     });
   }
-
 }
-
 ```
 
 # signals
@@ -173,36 +160,32 @@ export class MyElement extends XuiElement {
 define a global `SignalsDispatcher`.
 
 ```js
-
 import { SignalsDispatcher } from 'xuijs';
 
 window.Signals = new SignalsDispatcher();
-
 ```
 
 register an element.
 
 ```js
-
 Signals.register('name', Element);
-
 ```
 
 send or prodcast a signal.
 
 ```js
-
 const returnValuePromise = Signals.send('name', {
   signals: 'signalName',
   data: 'data to send'
 });
 
 // to prodcat to all registered.
-const iteratorOfPromises = Signals.prodcast({
-  signal: 'signalName',
-  data: 'data to send'
-}/* , optional regex */);
-
+const iteratorOfPromises = Signals.prodcast(
+  {
+    signal: 'signalName',
+    data: 'data to send'
+  } /* , optional regex */
+);
 ```
 
 in the element define a signal handeler.
@@ -224,7 +207,5 @@ in the element define a signal handeler.
 unregister an element.
 
 ```js
-
 Signals.unregister('name');
-
 ```

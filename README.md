@@ -25,13 +25,11 @@ $ npm i xuijs
 2. define the App.
 
 ```js
-
 import { Xui } from 'xuijs';
 
 const App = new Xui();
 
 App.init(document.body);
-
 ```
 
 3. define an element.
@@ -41,17 +39,16 @@ App.init(document.body);
 
 import { XuiElement, Variable } from 'xuijs';
 
-export class CountUp extends XuiElement {
-
+export class Ticker extends XuiElement {
   constructor(el) {
-      super(el);
+    super(el);
 
-      this.ticks = new Variable(0);
-      this.state = new Variable(false);
+    this.ticks = new Variable(0);
+    this.state = new Variable(false);
   }
 
   getTicks(ticks) {
-      return `${ticks}`;
+    return `${ticks}`;
   }
 
   resetTicks() {
@@ -63,43 +60,39 @@ export class CountUp extends XuiElement {
   }
 
   switchState() {
-    if(this.state.value) {
+    if (this.state.value) {
       window.clearInterval(this.ticker);
     } else {
-      this.ticker = window.setInterval(() => this.ticks.value++, 1000)
+      this.ticker = window.setInterval(() => this.ticks.value++, 1000);
     }
 
-    this.state.value = !this.state.value
+    this.state.value = !this.state.value;
   }
-
 }
-
 ```
 
 4. use the element.
 
 ```html
-
 <body>
   <div $init mount=":Ticker">
-      <span $bind:.inner-text="ticks@getTicks">0</span>
-      <div $init>
-        <button $event:click="@switchState"
-          $bind:.inner-text="state@getState"
-        >start</button>
-        <button $event:click="@resetTicks">reset</button>
-      </div>
+    <span $bind:.inner-text="ticks@getTicks">0</span>
+    <div $init>
+      <button $event:click="@switchState" $bind:.inner-text="state@getState">
+        start
+      </button>
+      <button $event:click="@resetTicks">reset</button>
+    </div>
   </div>
 </body>
-
 ```
 
 5. bundle with your favourite bundeler.
 
 # docs
 
-see [docs/](https://github.com/0xc0Der/xuijs/tree/main/docs "docs/") folder for more details.
+see [docs/](https://github.com/0xc0Der/xuijs/tree/main/docs 'docs/') folder for more details.
 
 # examples
 
-see [examples/](https://github.com/0xc0Der/xuijs/tree/main/examples "examples/") folder for example projects.
+see [examples/](https://github.com/0xc0Der/xuijs/tree/main/examples 'examples/') folder for example projects.

@@ -2,12 +2,12 @@ export default class Variable {
     #funcs = [];
     #value;
 
-    constructor (val) {
+    constructor(val) {
         this.#value = val;
     }
 
     set value(val) {
-        for(let func of this.#funcs) {
+        for (let func of this.#funcs) {
             func.call(null, val, this.#value);
         }
 
@@ -21,5 +21,4 @@ export default class Variable {
     addObserver(fun) {
         this.#funcs.push(fun);
     }
-
 }

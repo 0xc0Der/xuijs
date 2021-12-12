@@ -1,4 +1,4 @@
-import BaseElement from '../core/baseElement.js'
+import BaseElement from '../core/baseElement.js';
 import Scope from './utils/scope.js';
 
 export default class XuiElement extends BaseElement {
@@ -11,8 +11,8 @@ export default class XuiElement extends BaseElement {
     }
 
     attrsFilter(attrs) {
-        return Object.values(attrs).filter(
-            attr => attr.nodeName.startsWith('$')
+        return Object.values(attrs).filter(attr =>
+            attr.nodeName.startsWith('$')
         );
     }
 
@@ -31,12 +31,12 @@ export default class XuiElement extends BaseElement {
     $init({ value }, el = this.el) {
         const { variable: scope } = value;
 
-        if(scope) {
+        if (scope) {
             el.setAttribute('scope', scope);
         }
 
-        for(let child of el.children) {
-            for(let attr of this.handelAttributes(child)) {
+        for (let child of el.children) {
+            for (let attr of this.handelAttributes(child)) {
                 attr.ownerElement.removeAttribute(attr.nodeName);
             }
         }
@@ -53,7 +53,7 @@ export default class XuiElement extends BaseElement {
         const { variable, func } = value;
         const toCap = prop => prop.replace(/-[a-z]/g, m => m[1].toUpperCase());
 
-        if(prop.startsWith('.')) {
+        if (prop.startsWith('.')) {
             this[variable].addObserver((val, oldVal) => {
                 el[toCap(prop).slice(1)] = this[func](val, oldVal);
             });
@@ -67,7 +67,7 @@ export default class XuiElement extends BaseElement {
     $name({ value }, el = this.el) {
         const { variable: name, func: sigDispt } = value;
 
-        if(el !== this.el) {
+        if (el !== this.el) {
             throw new Error('invalid $name attribute.');
         }
 
@@ -81,12 +81,12 @@ export default class XuiElement extends BaseElement {
         const scope = params[0] || el.parentElement.getAttribute('scope');
         const { variable, func } = value;
 
-        if(!this.#scopes.hasOwnProperty(scope)) {
+        if (!this.#scopes.hasOwnProperty(scope)) {
             this.#scopes[scope] = new Scope(scope);
         }
 
         this.#scopes[scope].open('if', (value, oldValue) => {
-            return this[func]({ value, oldValue }, el)
+            return this[func]({ value, oldValue }, el);
         });
 
         this[variable].addObserver((val, oldVal) => {
@@ -98,12 +98,12 @@ export default class XuiElement extends BaseElement {
         const scope = params[0] || el.parentElement.getAttribute('scope');
         const { func } = value;
 
-        if(!this.#scopes.hasOwnProperty(scope)) {
+        if (!this.#scopes.hasOwnProperty(scope)) {
             throw new Error(`scope "${scope}" is undefined.`);
         }
 
         this.#scopes[scope].open('elif', (value, oldValue) => {
-            return this[func]({ value, oldValue }, el)
+            return this[func]({ value, oldValue }, el);
         });
     }
 
@@ -111,7 +111,7 @@ export default class XuiElement extends BaseElement {
         const scope = params[0] || el.parentElement.getAttribute('scope');
         const { func } = value;
 
-        if(!this.#scopes.hasOwnProperty(scope)) {
+        if (!this.#scopes.hasOwnProperty(scope)) {
             throw new Error(`scope "${scope}" is undefined.`);
         }
 
@@ -129,10 +129,9 @@ export default class XuiElement extends BaseElement {
         this[variable].addObserver((list, oldList) => {
             const body = this[func](name, { list, oldList }, el);
 
-            for(let [key, value] of Object.entries(list)) {
+            for (let [key, value] of Object.entries(list)) {
                 body({ key, value });
             }
         });
     }
-
 }

@@ -1,7 +1,6 @@
 import { XuiElement, Variable } from '../../../src/index.js';
 
 export default class extends XuiElement {
-
     constructor(el) {
         super(el);
 
@@ -12,7 +11,7 @@ export default class extends XuiElement {
         Signals.send('list', {
             signal: 'sigChange',
             data: { idx: this.name.split(' - ')[1], val: data }
-         });
+        });
     }
 
     incPrio() {
@@ -43,12 +42,10 @@ export default class extends XuiElement {
         return todo.done;
     }
 
-    className(todo){
-        return `${
-            todo.prio < 5 ? 'low' : todo.prio < 10 ? 'medium' : 'high'
-        }${
+    className(todo) {
+        return `${todo.prio < 5 ? 'low' : todo.prio < 10 ? 'medium' : 'high'}${
             todo.done ? ' done' : ''
-        }`
+        }`;
     }
 
     sigSet(data) {
@@ -63,5 +60,4 @@ export default class extends XuiElement {
         Signals.unregister(this.name);
         this.el.remove();
     }
-
 }

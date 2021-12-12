@@ -1,7 +1,6 @@
 import { XuiElement, Variable } from '../../../src/index.js';
 
 export default class extends XuiElement {
-
     constructor(el) {
         super(el);
 
@@ -28,5 +27,4 @@ export default class extends XuiElement {
     setStr(e) {
         this.str.value = e.target.value;
     }
-
 }
