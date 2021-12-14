@@ -1,32 +1,32 @@
 export default class Scope {
     #funcs = [];
     #name;
-    #state;
+    #isOpen = false;
 
     constructor(name) {
         this.#name = name;
     }
 
     open(name, func) {
-        if (this.#state !== undefined) {
-            throw new Error(`can't reopen scope ${this.#name}.`);
+        if (this.#isOpen) {
+            throw new Error(`scope ${this.#name} is already open.`);
         }
 
-        this.#state = 1;
+        this.#isOpen = true;
         this.#funcs.push({ name, func });
     }
 
     close(name, func) {
-        if (this.#state !== 1) {
+        if (!this.#isOpen) {
             throw new Error(`scope ${this.#name} is not open.`);
         }
 
-        this.#state = 0;
+        this.#isOpen = false;
         this.#funcs.push({ name, func });
     }
 
     add(name, func) {
-        if (this.#state !== 1) {
+        if (!this.#isOpen) {
             throw new Error(`scope ${this.#name} is not open.`);
         }
 
@@ -37,12 +37,9 @@ export default class Scope {
         for (let dir of this.#funcs) {
             const res = dir.func(value, oldValue);
 
-            if (res === false) {
-                continue;
-            } else if (typeof res === 'function') {
-                res();
-                break;
-            } else {
+            if (typeof res === 'function') {
+                return res();
+            } else if (res !== false) {
                 throw new Error(
                     `scope ${this.#name}: invalid return type in ${func.name}.`
                 );
