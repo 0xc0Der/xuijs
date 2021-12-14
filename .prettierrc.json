@@ -1,0 +1,14 @@
+{
+  "tabWidth": 4,
+  "singleQuote": true,
+  "trailingComma": "none",
+  "arrowParens": "avoid",
+  "overrides": [
+    {
+      "files": ["*.css", "*.md", "*.json"],
+      "options": {
+        "tabWidth": 2
+      }
+    }
+  ]
+}
