@@ -127,10 +127,14 @@ export default class XuiElement extends BaseElement {
         const { func, variable } = value;
 
         this[variable].addObserver((list, oldList) => {
-            const body = this[func](name, { list, oldList }, el);
+            const foreach = this[func](name, { list, oldList }, el);
+
+            if (typeof foreach !== 'function') {
+                throw new Error(`return type in "${func}" must be a function.`);
+            }
 
             for (let [key, value] of Object.entries(list)) {
-                body({ key, value });
+                foreach({ key, value });
             }
         });
     }
